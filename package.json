@@ -1,0 +1,24 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "A task manager app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rawan96/task-manager-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rawan96/task-manager-app/issues"
+  },
+  "homepage": "https://github.com/Rawan96/task-manager-app#readme",
+  "dependencies": {
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.15"
+  }
+}
