@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Rawan96/task-manager-app#readme",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "env2": "^2.2.2",
     "express": "^4.17.1",
     "mongodb": "^3.6.4",
