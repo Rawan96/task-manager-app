@@ -16,16 +16,3 @@ app.listen(port, () => {
     console.log(`Server is running on ${port}`)
 })
 
-//hash password 
-// const bcrypt = require('bcrypt')
-
-// const hashedFunc = async ()=>{
-//     let pass = '123456ro'
-//     let hashedPass = await bcrypt.hash(pass, 10)
-//     console.log({pass}, {hashedPass});
-
-//     const isMatch = await bcrypt.compare(pass, hashedPass)
-//     console.log(isMatch);
-// }
-
-// hashedFunc()
