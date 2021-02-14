@@ -21,7 +21,7 @@ router.post('/users/login', async (req, res) => {
         const {email,password} = req.body
         const user = await User.findByCredentials(email, password)
         const token = await user.generateAuthToken()
-        res.send({ user , token})
+        res.send({ user, token})
     } catch (e) {
         res.status(400).send(e.message)
     }
@@ -42,6 +42,7 @@ router.post('/users/logout', auth, async (req,res)=>{
 
     }
 })
+
 
 router.post('/users/logoutAll', auth, async (req,res)=>{
     try{

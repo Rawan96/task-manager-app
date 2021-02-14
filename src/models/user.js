@@ -50,6 +50,13 @@ const userSchema = new mongoose.Schema({
 })
 
 
+userSchema.methods.toJSON = function () {
+    const user = this.toObject()
+    delete user.password;
+    delete user.tokens; 
+    return user
+}
+
 userSchema.methods.generateAuthToken = async function(){
     const token = jwt.sign({_id: this._id.toString()}, process.env.secret)
     this.tokens = this.tokens.concat({token})
