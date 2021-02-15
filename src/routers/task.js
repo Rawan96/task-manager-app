@@ -17,12 +17,15 @@ router.post('/tasks', auth, async (req, res) => {
     }
 })
 
+// GET /tasks?completed=true
 router.get('/tasks', auth,  async (req, res) => {
+   
     try {
-        const tasks = await Task.find({author: req.user._id})
+        const tasks = await Task.find({author: req.user._id , completed: req.query.completed})
         res.send(tasks)
     } catch (e) {
-        res.status(500).send()
+        console.log(e.message);
+        res.status(500).send(e)
     }
 })
 
