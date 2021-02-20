@@ -1,12 +1,20 @@
 require('env2')('./test.env');
 const request = require('supertest')
+const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 const app = require('../src/app')
 const User = require('../src/models/user')
 
+const userId = new mongoose.Types.ObjectId()
+
 const user ={
+  _id: userId,
   name: 'Mohammed',
   email:'moh@example.com',
-  password:'123456789'
+  password:'123456789',
+  tokens:[{
+    token : jwt.sign({_id:userId}, process.env.JWT_SECRET)
+  }]
 }
 
 beforeEach(async ()=>{
@@ -34,4 +42,20 @@ test('should not logging non existing user', async()=>{
     email:'non@example.com',
     password:'123456789'
   }).expect(400)
+})
+
+
+test('Should get profile for user', async()=>{
+  await request(app)
+        .get('/users/me')
+        .send()
+        .set('Authorization', `Bearer ${user.tokens[0].token}`)
+        .expect(200)
+})
+
+test('Sould not get profile for unath user', async()=>{
+  await request(app)
+        .get('/users/me')
+        .send()
+        .expect(401)
 })
