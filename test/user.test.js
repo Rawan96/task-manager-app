@@ -23,25 +23,34 @@ beforeEach(async ()=>{
 })
 
 test('Should signup a new user', async () => {
-    await request(app).post('/users').send({
-        name: 'not',
-        email: 'not@example.com',
-        password: '123456ro'
-    }).expect(201)
+    await request(app)
+          .post('/users')
+          .send({
+            name: 'not',
+            email: 'not@example.com',
+            password: '123456ro'
+          })
+          .expect(201)
 })
 
 test('Should logging existing user', async()=>{
-  await request(app).post('/users/login').send({
-    email:user.email,
-    password:user.password
-  }).expect(200)
+  await request(app)
+        .post('/users/login')
+        .send({
+          email:user.email,
+          password:user.password
+        })
+        .expect(200)
 })
 
 test('should not logging non existing user', async()=>{
-  await request(app).post('/users/login').send({
-    email:'non@example.com',
-    password:'123456789'
-  }).expect(400)
+  await request(app)
+        .post('/users/login')
+        .send({
+          email:'non@example.com',
+          password:'123456789'
+        })
+        .expect(400)
 })
 
 
@@ -56,6 +65,21 @@ test('Should get profile for user', async()=>{
 test('Sould not get profile for unath user', async()=>{
   await request(app)
         .get('/users/me')
+        .send()
+        .expect(401)
+})
+
+test('Should delete account for user', async () => {
+    await request(app)
+        .delete('/users/me')
+        .set('Authorization', `Bearer ${user.tokens[0].token}`)
+        .send()
+        .expect(200)
+})
+
+test('Should not delete account for unauthenticate user', async () => {
+    await request(app)
+        .delete('/users/me')
         .send()
         .expect(401)
 })
