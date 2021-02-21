@@ -111,3 +111,28 @@ test('Should upload avatar image', async()=>{
   const avatarUser = await User.findById(userId)
   expect(avatarUser.avatar).toEqual(expect.any(Buffer))
 })
+
+
+test('Should update valid user fields', async()=>{
+  await request(app)
+        .patch('/users/me')
+        .set('Authorization', `Bearer ${user.tokens[0].token}`)
+        .send({
+          name:'jess'
+        })
+        .expect(200)
+  
+  const updUser = await User.findById(userId)
+  expect(updUser.name).toBe('jess')
+})
+
+
+test('Should not update invalid user fields', async()=>{
+  await request(app)
+        .patch('/users/me')
+        .set('Authorization', `Bearer ${user.tokens[0].token}`)
+        .send({
+          location:'Gaza'
+        })
+        .expect(400)
+})
