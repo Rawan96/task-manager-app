@@ -100,3 +100,14 @@ test('Should not delete account for unauth user', async () => {
         .send()
         .expect(401)
 })
+
+test('Should upload avatar image', async()=>{
+  await request(app)
+        .post('/users/me/avatar')
+        .set('Authorization', `Bearer ${user.tokens[0].token}`)
+        .attach('avatar', 'test/fixtures/philly.jpg')
+        .expect(200)
+
+  const avatarUser = await User.findById(userId)
+  expect(avatarUser.avatar).toEqual(expect.any(Buffer))
+})
