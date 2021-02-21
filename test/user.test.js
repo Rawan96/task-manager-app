@@ -3,7 +3,8 @@ const request = require('supertest')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const app = require('../src/app')
-const User = require('../src/models/user')
+const User = require('../src/models/user');
+const { response } = require('express');
 
 const userId = new mongoose.Types.ObjectId()
 
@@ -23,24 +24,37 @@ beforeEach(async ()=>{
 })
 
 test('Should signup a new user', async () => {
-    await request(app)
+    const response = await request(app)
           .post('/users')
           .send({
-            name: 'not',
-            email: 'not@example.com',
+            name: 'Rawan',
+            email: 'raw@example.com',
             password: '123456ro'
           })
           .expect(201)
+
+    const user = await User.findById(response.body.user._id)
+    expect(user).not.toBeNull()
+    expect(response.body).toMatchObject({
+      user:{
+        name:'Rawan',
+        email: 'raw@example.com'
+      }, 
+      token: user.tokens[0].token
+    })
 })
 
 test('Should logging existing user', async()=>{
-  await request(app)
+  const response = await request(app)
         .post('/users/login')
         .send({
           email:user.email,
           password:user.password
         })
         .expect(200)
+        
+  const logUser = await User.findById(user._id)
+  expect(response.body.token).toBe(logUser.tokens[1].token)
 })
 
 test('should not logging non existing user', async()=>{
@@ -62,7 +76,7 @@ test('Should get profile for user', async()=>{
         .expect(200)
 })
 
-test('Sould not get profile for unath user', async()=>{
+test('Should not get profile for unath user', async()=>{
   await request(app)
         .get('/users/me')
         .send()
@@ -75,9 +89,12 @@ test('Should delete account for user', async () => {
         .set('Authorization', `Bearer ${user.tokens[0].token}`)
         .send()
         .expect(200)
+
+    const deleteUser = await User.findById(userId)
+    expect(deleteUser).toBeNull()
 })
 
-test('Should not delete account for unauthenticate user', async () => {
+test('Should not delete account for unauth user', async () => {
     await request(app)
         .delete('/users/me')
         .send()
