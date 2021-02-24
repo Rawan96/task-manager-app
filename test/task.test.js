@@ -130,4 +130,36 @@ test('Should only fetch incomplete task', async () => {
     expect(response.body.length).toBe(1)
 })
 
+test('Should sort task by description', async () => {
+    const response = await request(app)
+        .get(`/tasks?sortBy=description:desc`)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+
+    expect(response.body[0].description).toBe('Second task')
+})
+
+test('Should sort task by createdAt', async () => {
+    const response = await request(app)
+        .get('/tasks?sortBy=createdAt:desc')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+
+    expect(response.body[0].description).toBe('Second task')
+})
+
+test('Shoud sort task by updateAt', async () => {
+    // Updating the first task
+    await Task.findByIdAndUpdate(taskOne._id, { description: 'First Again' })
+    const response = await request(app)
+        .get('/tasks?sortBy=updatedAt:desc')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+
+    expect(response.body[0].description).toBe('First Again')
+})
+
 
