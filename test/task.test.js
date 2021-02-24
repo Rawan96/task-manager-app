@@ -67,3 +67,15 @@ test('Should not able to delete task if unauthorized', async () => {
 })
 
 
+test('Should not create task with invalid completed field', async () => {
+    await request(app)
+        .post('/tasks')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            completed: 'true'
+        })
+        .expect(400)
+})
+
+
+
