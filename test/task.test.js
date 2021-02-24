@@ -34,7 +34,6 @@ test('Should fetch user tasks', async () => {
         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
         .send()
         .expect(200)
-        console.log(response.body);
     expect(response.body.length).toEqual(2)
 })
 
