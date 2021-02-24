@@ -93,7 +93,6 @@ test('Should not update other users task', async () => {
 
 
 test('Should fetch user task by ID', async () => {
-    // Assertion to fetch the user task
     const response = await request(app)
         .get(`/tasks/${taskOne._id}`)
         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
@@ -108,6 +107,27 @@ test('Should not able to fetch task with ID if not authorized', async () => {
         .get(`/tasks/${taskOne._id}`)
         .send()
         .expect(401)
+})
+
+
+test('Should only fetch completed task', async () => {
+    const response = await request(app)
+        .get(`/tasks?completed=true`)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+
+    expect(response.body.length).toBe(1)
+})
+
+test('Should only fetch incomplete task', async () => {
+    const response = await request(app)
+        .get(`/tasks?completed=false`)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+
+    expect(response.body.length).toBe(1)
 })
 
 
