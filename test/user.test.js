@@ -1,6 +1,7 @@
 require('env2')('./test.env');
 const request = require('supertest')
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 const app = require('../src/app')
 const User = require('../src/models/user');
 const {userOne, userOneId, setupDatabase} = require('./fixtures/db')
@@ -143,4 +144,41 @@ test('Should not signup user with invalid password', async () => {
             password: '123'
         })
         .expect(400)
+})
+
+
+test('Should not update the user if unauthenticated', async () => {
+    await request(app)
+        .patch('/users/me')
+        .send({
+            name: 'Salem'
+        })
+        .expect(401)
+})
+
+test('Should not update user with invalid email', async () => {
+    const response = await request(app)
+        .patch('/users/me')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            email: 'sally.com'
+        })
+        .expect(400)
+
+    const user = await User.findById(userOneId)
+    expect(user.email).not.toBe('sally.com')
+})
+
+test('Should not update user with invalid password', async () => {
+    const response = await request(app)
+        .patch('/users/me')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            password: '1234'
+        })
+        .expect(400)
+
+    const user = await User.findById(userOneId)
+    const isSame = await bcrypt.compare('1234', user.password)
+    expect(isSame).toBe(false)
 })
