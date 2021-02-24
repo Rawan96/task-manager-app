@@ -48,3 +48,22 @@ test('Should not delete other users tasks', async () => {
 })
 
 
+test('Should be able to delete task for authorized user', async () => {
+    const response = await request(app)
+        .delete(`/tasks/${taskOne._id}`)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+
+    const task = await Task.findById(taskOne._id)
+    expect(task).toBeNull()
+})
+
+test('Should not able to delete task if unauthorized', async () => {
+    await request(app)
+        .delete(`/tasks/${taskOne._id}`)
+        .send()
+        .expect(401)
+})
+
+
