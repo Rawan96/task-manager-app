@@ -121,3 +121,26 @@ test('Should not update invalid user fields', async()=>{
         })
         .expect(400)
 })
+
+
+test('Should not signup user with invalid email', async () => {
+    await request(app)
+        .post('/users')
+        .send({
+            name: 'Sally',
+            email: 'sal.com',
+            password: 'saly123456'
+        })
+        .expect(400)
+})
+
+test('Should not signup user with invalid password', async () => {
+    await request(app)
+        .post('/users')
+        .send({
+            name: 'Lama',
+            emial: 'lam@gmail.com',
+            password: '123'
+        })
+        .expect(400)
+})
