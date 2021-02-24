@@ -92,4 +92,22 @@ test('Should not update other users task', async () => {
 })
 
 
+test('Should fetch user task by ID', async () => {
+    // Assertion to fetch the user task
+    const response = await request(app)
+        .get(`/tasks/${taskOne._id}`)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+
+    expect(response.body.description).toBe(taskOne.description)
+})
+
+test('Should not able to fetch task with ID if not authorized', async () => {
+    await request(app)
+        .get(`/tasks/${taskOne._id}`)
+        .send()
+        .expect(401)
+})
+
 
