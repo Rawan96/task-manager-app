@@ -78,4 +78,18 @@ test('Should not create task with invalid completed field', async () => {
 })
 
 
+test('Should not update other users task', async () => {
+    await request(app)
+        .patch('/tasks/update/' + taskThree._id)
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            description: 'Change three description'
+        })
+        .expect(404)
+
+    const task = await Task.findById(taskThree._id)
+    expect(task.description).not.toBe('Change three description')
+})
+
+
 
