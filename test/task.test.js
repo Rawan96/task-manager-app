@@ -139,7 +139,7 @@ test('Should sort task by createdAt', async () => {
   expect(response.body[0].description).toBe('Second task');
 });
 
-test('Shoud sort task by updateAt', async () => {
+test('Should sort task by updateAt', async () => {
   // Updating the first task
   await Task.findByIdAndUpdate(taskOne._id, { description: 'First Again' });
   const response = await request(app)

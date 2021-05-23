@@ -85,7 +85,7 @@ test('Should upload avatar image', async () => {
   await request(app)
     .post('/users/me/avatar')
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
-    .attach('avatar', 'test/fixtures/philly.jpg')
+    .attach('avatar', 'test/fixtures/img.jpg')
     .expect(200);
 
   const user = await User.findById(userOneId);
